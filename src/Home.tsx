@@ -34,6 +34,9 @@ if(productCategory===""){
   setFilteredData(data);
 }
 }
+
+
+
 const handleSortChange = (e:any)=>{
         const sortSelected:any=e.target.value
         setSort(sortSelected);
