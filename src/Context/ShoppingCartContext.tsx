@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { CartItem } from '../Types/productTypes.ts';
+import { useAuth0 } from '@auth0/auth0-react';
 
 interface CartContextType {
   cart: CartItem[];
@@ -25,13 +26,38 @@ interface CartProviderProps {
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const {user } = useAuth0();
+  
+  useEffect(() => {
+    if (user?.email) {
+      const storedCarts = localStorage.getItem('carts');
+      const carts = storedCarts ? JSON.parse(storedCarts) : {};
+      setCart(carts[user.email] || []);
+    }
+  }, [user?.email])
+
+
+  useEffect(() => {
+    if(user?.email) {
+        const storedCarts = localStorage.getItem('carts');
+        const carts = storedCarts ? JSON.parse(storedCarts) : {};
+        carts[user.email]=cart; 
+        localStorage.setItem('carts',JSON.stringify(carts)); 
+
+    }
+}, [cart,user?.email]);
+
 
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem('cart') || '[]') as CartItem[];
     setCart(savedCart);
   }, []);
-
+    
+  // const { user } = useAuth0();
+  
   const addToCart = (product: CartItem) => {
+    // console.log(user?.sub);
+
     const existingProductIndex = cart.findIndex((item) => item.id === product.id);
     let updatedCart;
 
@@ -42,7 +68,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     } else {
       updatedCart = [...cart, { ...product, quantity: 1 }];
     }
-
     setCart(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
   };

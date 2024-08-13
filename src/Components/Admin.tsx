@@ -5,8 +5,8 @@ function Admin() {
     const [title,setTitle] = useState('');
     const [price,setPrice] = useState('');
     const [description,setDescription] = useState('')
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [preview, setPreview] = useState(null);
+    const [selectedFile, setSelectedFile] = useState<File|null>(null);
+  const [preview, setPreview] = useState<string>('');
     const [productCategory,setProductCategory] = useState('');
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         // Get the selected file
@@ -19,8 +19,32 @@ function Admin() {
           setPreview(filePreview);
         }
       };
-    const handleSubmit = async (e)=>{
+    const handleSubmit = async (e:any)=>{
         e.preventDefault();
+    //    if(title==="" && price==="" && description==="" && productCategory==="" && selectedFile===""){
+    //         alert("Enter Data")
+    //    }
+       if(title===""){
+        alert("Title Field Can't Be Empty")
+        return
+       }
+       if(price===""){
+        alert("Price Field Can't Be Empty")
+        return
+       }
+       if(description===""){
+        alert("Description Field Can't Be Empty")
+        return
+       }
+       if(productCategory===""){
+        alert("Category Field Can't Be Empty")
+        return
+       }
+       if(selectedFile===null){
+        alert("Image Field Can't Be Empty")
+        return
+       }
+     
         fetch('https://fakestoreapi.com/products',{
             method:"POST",
             body:JSON.stringify(
@@ -42,6 +66,7 @@ function Admin() {
                 console.log('errrrrrrrrrrrro',err);
                 
             })
+       
     }
   return (
     <div className="max-w-md mx-auto p-4 bg-white shadow-md rounded-lg mb-10 mt-5">
@@ -94,7 +119,7 @@ function Admin() {
           type="file"
           accept="image/*"
           onChange={handleFileChange}
-          className="mb-4"
+          className="mb-4 w-full justify-center items-center"
         />
         {preview && (
           <div>
@@ -109,7 +134,7 @@ function Admin() {
       </div>
       <div>
         <button
-          onClick={(e) => handleSubmit(e)}
+          onClick={handleSubmit}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
         >
           Submit

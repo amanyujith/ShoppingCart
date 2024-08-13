@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom"
-import Button from "./Utilities/Button";
+import Button from "../Utilities/Button";
 
 const Product=({...props})=>{
     const navigate=useNavigate();
     // console.log(props)
-    const handleView=(e:Event)=>{
-        e.preventDefault();
+    const handleView=()=>{
+        // e.preventDefault();
         navigate(`/view/${props.id}`);
     }
     
@@ -24,8 +24,8 @@ const Product=({...props})=>{
                 View
             </button>
         </div> */}
-        <div onClick={handleView}>
-            <Button value='View'/>
+        <div >
+            <Button onClick={handleView} value='View'/>
         </div>
      </div>
   </div>

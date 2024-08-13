@@ -1,6 +1,6 @@
 // import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import LoginButton from "./Login/LogInButton";
+import LoginButton from "../Login/LogInButton";
 import { useAuth0 } from "@auth0/auth0-react";
 const Navbar = () => {
   //const navigate = useNavigate();

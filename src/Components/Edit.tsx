@@ -1,16 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Button from "./Utilities/Button";
+// import Button from "../Utilities/Button";
 
 function Edit() {
   const { id } = useParams();
   const [data, setData] = useState([]);
   const [title, setTitle] = useState("");
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState<number>(0);
   const [productCategory, setProductCategory] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<File|null>(null);
+  const [preview, setPreview] = useState<string>('');
   const [description, setDescription] = useState("");
   useEffect(() => {
     axios
@@ -25,17 +25,32 @@ function Edit() {
       .catch((error) => console.error("Error fetching products:", error));
   }, []);
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Get the selected file
     const file = event.target.files ? event.target.files[0] : null;
     setSelectedFile(file);
 
     if (file) {
-      // Generate a URL for the selected image
       const filePreview = URL.createObjectURL(file);
       setPreview(filePreview);
     }
   };
   const edit = () => {
+    if (title === "") {
+      alert("Title field can't be empty");
+      return;
+    }
+    if (description === "") {
+      alert("Description field can't be empty");
+      return;
+    }
+    if (productCategory === "") {
+      alert("Category field can't be empty");
+      return;
+    }
+    if (selectedFile === null) {
+      alert("Image field can't be empty");
+      return;
+    }
+  
     fetch(`https://fakestoreapi.com/products/${id}`, {
       method: "PATCH",
       body: JSON.stringify({
@@ -49,11 +64,16 @@ function Edit() {
       .then((res) => res.json())
       .then((json) => {
         console.log(json);
-        alert("Edited Data Succesfully");
+        alert("Edited Data Successfully");
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Failed to edit data");
       });
   };
+  
   return (
-    <div className="max-w-md mx-auto p-4 bg-slate-300 shadow-md rounded-lg">
+    <div className="max-w-md mx-auto p-4 bg-slate-300 shadow-md rounded-lg mt-5" >
       <h2 className="text-lg font-bold mb-4">Edit</h2>
       <form>
         <div className="mb-4">
@@ -74,7 +94,7 @@ function Edit() {
             name=""
             value={price}
             id=""
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={(e) => setPrice(Number(e.target.value))}
             className="w-full p-2 border border-gray-300 rounded-lg"
           />
         </div>
@@ -88,12 +108,12 @@ function Edit() {
             className="w-full p-2 border border-gray-300 rounded-lg"
           ></textarea>
         </div>
-        <div className="flex flex-col items-center mb-4">
+        <div className="flex flex-col justify-center items-center mb-4">
           <input
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="mb-4"
+            className="mb-4 flex justify-center items-center w-full"
           />
           {preview && (
             <div>
