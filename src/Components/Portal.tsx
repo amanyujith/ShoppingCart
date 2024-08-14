@@ -71,6 +71,9 @@ function Portal() {
         <div className="w-40">
           <Button onClick={()=>window.location.href = '/dashboard'} value='Dashboard'/>
           </div>
+          <div className="w-40">
+          <Button onClick={()=>window.location.href = '/leaderboard'} value='Leaderboard'/>
+          </div>
       </div>
   
       {/* Main content area */}

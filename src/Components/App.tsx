@@ -17,6 +17,7 @@ import Dashboard from './Dashboard';
 import { Provider } from 'react-redux';
 import store, { persistor } from '../store/store';
 import { PersistGate } from 'redux-persist/integration/react';
+import { LeaderBoard } from './LeaderBoard';
 
 function App() {
   const {isAuthenticated} =useAuth0();
@@ -37,6 +38,7 @@ function App() {
     <Route path='/profile' element={<Profile/>}/>
     <Route path='/edit/:id' element={<Edit/>}/>
     <Route path='/dashboard' element={<Dashboard/>}/>
+    <Route path='/leaderboard' element={<LeaderBoard/>}/>
     </Routes>
   </Router>
   </PersistGate>
