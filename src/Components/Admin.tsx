@@ -1,50 +1,41 @@
 import { useState } from "react";
+import Button from "../Utilities/Button";
+import { Modal } from "./Modal";
 
 function Admin() {
     const [data,setData] = useState([]);
     const [title,setTitle] = useState('');
     const [price,setPrice] = useState('');
-    const [description,setDescription] = useState('')
+    const [description,setDescription] = useState('');
+    const [isModalOpen,setIsModalOpen] = useState(false)
     const [selectedFile, setSelectedFile] = useState<File|null>(null);
+    const [isFieldsEmpty, setIsFieldsEmpty] = useState(false);
   const [preview, setPreview] = useState<string>('');
     const [productCategory,setProductCategory] = useState('');
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // Get the selected file
         const file = event.target.files ? event.target.files[0] : null;
         setSelectedFile(file);
     
         if (file) {
-          // Generate a URL for the selected image
+         
           const filePreview = URL.createObjectURL(file);
           setPreview(filePreview);
         }
       };
-    const handleSubmit = async (e:any)=>{
+      const handleModal = ()=>{
+        setIsModalOpen(false)
+      }
+    const handleSubmit =  (e: { preventDefault: () => void; })=>{
         e.preventDefault();
-    //    if(title==="" && price==="" && description==="" && productCategory==="" && selectedFile===""){
-    //         alert("Enter Data")
-    //    }
-       if(title===""){
-        alert("Title Field Can't Be Empty")
-        return
+       if(title.trim()==="" && price.trim()==="" && description.trim()==="" && productCategory.trim()==="" ){
+            setIsModalOpen(true)
+            setIsFieldsEmpty(true);
        }
-       if(price===""){
-        alert("Price Field Can't Be Empty")
-        return
-       }
-       if(description===""){
-        alert("Description Field Can't Be Empty")
-        return
-       }
-       if(productCategory===""){
-        alert("Category Field Can't Be Empty")
-        return
-       }
-       if(selectedFile===null){
-        alert("Image Field Can't Be Empty")
-        return
-       }
-     
+       else {
+        setIsFieldsEmpty(false);
+        setIsModalOpen(true); 
+      }
+      
         fetch('https://fakestoreapi.com/products',{
             method:"POST",
             body:JSON.stringify(
@@ -59,7 +50,7 @@ function Admin() {
         }).then(res=>res.json())
                 
             
-            .then(json=>{console.log(json);alert('Edited')
+            .then(json=>{console.log(json);/*alert('Edited')*/
             })
             .catch((err)=>{
                 
@@ -71,7 +62,7 @@ function Admin() {
   return (
     <div className="max-w-md mx-auto p-4 bg-white shadow-md rounded-lg mb-10 mt-5">
     <h1 className="text-2xl font-bold mb-4">Admin</h1>
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="mb-4">
         <label className="block text-gray-700">Title</label>
         <input
@@ -107,7 +98,7 @@ function Admin() {
           onChange={(e) => setProductCategory(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-lg"
         >
-          <option value="all">Category</option>
+          {/* <option value="all">Category</option> */}
           <option value="men's clothing">Men's Clothing</option>
           <option value="women's clothing">Ladies Clothing</option>
           <option value="electronics">Electronics</option>
@@ -133,14 +124,24 @@ function Admin() {
         {selectedFile && <p>File name: {selectedFile.name}</p>}
       </div>
       <div>
-        <button
+        {/* <button
           onClick={handleSubmit}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
         >
           Submit
-        </button>
+        </button> */}
+        <Button 
+        value="Submit" onClick={()=>{}}
+        />
       </div>
     </form>
+      <Modal
+      isOpen={isModalOpen}
+      title={isFieldsEmpty ? "Field's Can't Be Empty" : "Item Added"}
+      content={isFieldsEmpty ? "Please Fill All The Fields" : "Your item has been added successfully."}
+      onCancel={handleModal}
+      cancel="OK"
+      />
   </div>
   
   )

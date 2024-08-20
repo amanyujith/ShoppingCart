@@ -41,11 +41,11 @@ const Home = () => {
   // }
   // }
 
-  const handleSortChange = (e: any) => {
-    const sortSelected: any = e.target.value;
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const sortSelected = e.target.value;
     setSort(sortSelected);
   };
-  const handleFilteredChange = (e: any) => {
+  const handleFilteredChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     const selectedCategory = e.target.value; 
     setProductCategory(selectedCategory);
@@ -66,25 +66,27 @@ const Home = () => {
             setSearch(e.target.value);
           }}
           type="text"
-          className=" text-xl w-full pl-10 mt-10 text-gray-700"
+          className=" w-full py-2 px-4 mt-10 text-xl text-gray-700 border border-gray-300 
+          rounded-full shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 
+          focus:border-transparent"
           placeholder="Search..."
         />
       </div>
       <div></div>
 
-      <div>
+      <div className="flex flex-col justify-center w-full">
         <h1 className="text-3xl font-bold text-center text-blue-600 py-8 px-4">
           Happy Shopping!!
         </h1>
-        <div className="flex justify-center mb-4 gap-x-2">
-          <div className="w-full md:w-1/2 xl:w-1/3">
+        <div className="flex justify-center  mb-4 space-x-2">
+          <div className=" ">
             <select onChange={handleSortChange} className="bg-gray-300">
               <option value="random">Sort By</option>
               <option value="asc">Price: Low to High</option>
               <option value="desc">Price: High to Low</option>
             </select>
           </div>
-          <div className="w-full md:w-1/2 xl:w-1/3 ">
+          <div className="  ">
             <select
               value={productCategory}
               onChange={handleFilteredChange}
@@ -108,12 +110,16 @@ const Home = () => {
                   : item.title.toLowerCase().includes(search);
               })
               .sort((a, b) => {
-                if (sort === "asc") {
-                  return a.price - b.price;
-                } else if (sort === "desc") {
-                  return b.price - a.price;
+                if (typeof a.price === 'number' && typeof b.price === 'number') {
+                  if (sort === "asc") {
+                    return a.price - b.price;
+                  } else if (sort === "desc") {
+                    return b.price - a.price;
+                  }
                 }
+                return 0; 
               })
+              
               .map((datas: Props) => {
                 return <Product {...datas} />;
               })}

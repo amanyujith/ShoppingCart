@@ -5,7 +5,10 @@ import Button from "../Utilities/Button.tsx";
 import Admin from "./Admin.tsx";
 import LogoutButton from "../Login/LogOutButton.tsx";
 import NoAcces from "./NoAcces.tsx";
+import { Modal } from "./Modal.tsx";
 interface Product {
+  price: number;
+  image: string | undefined;
   id: number;
   title: string;
   category: string;
@@ -16,8 +19,12 @@ function Portal() {
     const {user} = useAuth0();
     const [all,setAll] = useState('all')
     const [ismail,setIsMail] = useState(false);
+    const [isModalOpen,setIsModalOpen] = useState(false)
     const [filteredData,setFilteredData] = useState<Product[]>([]);
     const [productCategory,setProductCategory] = useState("");
+    const handleModal = ()=>{
+      setIsModalOpen(false)
+    }
     useEffect(() => {
         if (user?.email === 'amanyujith4444@gmail.com') {
             setIsMail(true);
@@ -38,7 +45,7 @@ function Portal() {
             .then(res=>res.json())
             .then(json=>{console.log(json);alert('Deleted')})
     }
-    const handleFilteredChange = (e:any)=>{
+    const handleFilteredChange = (e:React.ChangeEvent<HTMLSelectElement>)=>{
         // setProductCategory(e.target.value);
         const cat = e.target.value;
         setProductCategory(cat)
@@ -94,7 +101,7 @@ function Portal() {
         {/* Products listing */}
         {all === 'all' ? (
           <div className="grid grid-cols-1 gap-10">
-            {filteredData.map((datas: Object) => (
+            {filteredData.map((datas: Product) => (
               <div key={datas.id} className="flex sm:flex-row flex-col-reverse justify-between p-5 bg-white rounded-lg shadow-lg">
                 <div className="flex sm:flex-row flex-col gap-5">
                   <div className="w-40 h-40 flex items-center justify-center overflow-hidden">
@@ -111,12 +118,28 @@ function Portal() {
                     </div>
                   </div>
                 </div>
-                <button
+                {/* <button
                   onClick={() => handleRemove(datas.id)}
                   className="bg-red-500 text-white h-10 w-10 rounded-full flex items-center justify-center font-bold hover:bg-red-600"
                 >
                   X
-                </button>
+                </button> */}
+                <div className="bg-red-500 text-white h-10 w-10 rounded-full flex items-center justify-center
+                 font-bold hover:bg-red-60">
+                <Button 
+                value="X" 
+                 onClick={() => setIsModalOpen(true)}
+                />
+                <Modal
+                  isOpen={isModalOpen}
+                  title="Are You Sure"
+                  cancel="No"
+                  onCancel={handleModal}
+                  buttonAction={()=>handleRemove(datas.id)}
+                  buttonText="Yes"
+                  />
+                </div>
+                
               </div>
             ))}
           </div>
@@ -125,7 +148,9 @@ function Portal() {
         )}
       </div>
     </div>
-  </div>:<NoAcces/>}</div>
+  </div>:<NoAcces/>}
+  
+  </div>
   
 )
 }

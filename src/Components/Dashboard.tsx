@@ -6,6 +6,7 @@ import BarData from '../Data/BarData.json'
 import Button from "../Utilities/Button";
 // import { ChartData } from "chart.js";
 // import Title from './Data/Title.json'
+import { ChartData } from "chart.js";
 const Dashboard = () => {
     const [chartData, setChartData] = useState<any>(null); 
     const [selectedCategory,setSelectedCategory]=useState<string>('');
@@ -20,9 +21,7 @@ const Dashboard = () => {
                 // const id = filteredData.map((product:{id:number})=>product.id)
                 const prices = filteredData.map((product: { price: number }) => product.price);
                 const ratings = filteredData.map((product: { rating: { rate: number } }) => product.rating.rate);
-                
                 setChartData({
-                    
                     barData: {
                         labels: titles,
                         datasets: [
@@ -58,7 +57,6 @@ const Dashboard = () => {
                                 borderWidth: 1
                             }
                         ]
-
                     }
                 });
             } catch (err) {
@@ -67,7 +65,6 @@ const Dashboard = () => {
         };
         fetchData();
     }, [selectedCategory]);
-
     return (
         <div className="flex w-full flex-col">
              <div className=" bg-gray-300 flex flex-row justify-between fixed w-full p-5 flex-wrap">
@@ -83,8 +80,7 @@ const Dashboard = () => {
                         <select className="border-2 border-black bg-gray-300 rounded p-2"
                             id="category"
                             value={selectedCategory}
-                            onChange={(e) => setSelectedCategory(e.target.value)}
-                        >
+                            onChange={(e) => setSelectedCategory(e.target.value)} >
                             <option value="">All</option>
                             <option value="electronics">Electronics</option>
                             <option value="jewelery">Jewelery</option>
@@ -104,5 +100,4 @@ const Dashboard = () => {
         </div>
     );
 };
-
 export default Dashboard;
